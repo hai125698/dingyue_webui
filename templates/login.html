@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div id="login-container">
+        <h2>请输入密码</h2>
+        <form id="loginForm" method="post" action="{{ url_for('check_password') }}">
+            <label for="password">密码：</label>
+            <input type="password" id="password" name="password">
+            <button type="submit">登录</button>
+        </form>
+        <div id="loginMessage" style="color: red;">{{ message }}</div>
+    </div>
+
+    <script>
+        // 如果需要在页面加载时自动进行密码验证，可以在这里添加相应的 JavaScript 代码
+    </script>
+</body>
+</html>

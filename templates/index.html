@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Text</title>
+</head>
+<body>
+<div id="content-container">
+    {% if error_message %}
+        <div id="error-message" style="color: red;">{{ error_message }}</div>
+    {% endif %}
+
+    <!-- 新建标签和保存按钮 -->
+    <button type="button" onclick="addNewTag()">新建标签</button>
+    <button type="button" onclick="saveContent()">保存</button>
+
+    <!-- 编辑区域 -->
+    <form method="post" action="{{ url_for('save') }}" id="editForm">
+        {% for line in content %}
+            <div>
+                <textarea name="content[]" rows="3" cols="80">{{ line }}</textarea>
+                <button type="button" onclick="deleteLine(this)">删除</button>
+            </div>
+        {% endfor %}
+    </form>
+
+    <!-- 修改密码标签 -->
+    <label for="newPassword">新密码：</label>
+    <input type="password" id="newPassword" name="newPassword">
+    <button onclick="changePassword()">修改密码</button>
+
+    <!-- 提示信息 -->
+    <div id="message" style="display: none;"></div>
+</div>
+
+<script>
+    var isLoggedIn = false;
+
+    // 修改密码
+    function changePassword() {
+        if (!isLoggedIn) {
+            alert('请先登录');
+            return;
+        }
+
+        var newPassword = document.getElementById('newPassword').value;
+
+        // 发送新密码到后端
+        fetch('/change_password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'newPassword=' + encodeURIComponent(newPassword),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // 显示保存成功消息
+                    alert(data.message);
+                } else {
+                    // 显示错误消息
+                    alert(data.message);
+                }
+
+                if (data.content) {
+                    // 更新编辑区域的内容
+                    var editForm = document.getElementById('editForm');
+
+                    // 清空编辑区域的内容
+                    editForm.innerHTML = '';
+
+                    // 遍历新内容并创建相应的元素
+                    data.content.forEach(function (line) {
+                        var div = document.createElement('div');
+                        var textarea = document.createElement('textarea');
+                        textarea.name = 'content[]';
+                        textarea.rows = '3';
+                        textarea.cols = '80';
+                        textarea.value = line;
+
+                        var deleteButton = document.createElement('button');
+                        deleteButton.type = 'button';
+                        deleteButton.textContent = '删除';
+                        deleteButton.onclick = function () {
+                            deleteLine(this);
+                        };
+
+                        div.appendChild(textarea);
+                        div.appendChild(deleteButton);
+
+                        // 将新创建的元素添加到编辑区域
+                        editForm.appendChild(div);
+                    });
+                }
+            });
+    }
+
+    // 保存内容（异步保存，阻止表单默认提交）
+    function saveContent() {
+        if (!isLoggedIn) {
+            alert('请先登录');
+            return;
+        }
+
+        var formData = new FormData(document.getElementById('editForm'));
+
+        // 发送保存请求
+        fetch('/save', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // 显示保存成功消息
+                    alert(data.message);
+                } else {
+                    // 显示错误消息
+                    alert(data.message);
+                }
+                // 无需更新编辑区域的内容，因为后端返回的不包含 content 字段
+            });
+    }
+
+    // 删除行
+    function deleteLine(button) {
+        if (!isLoggedIn) {
+            alert('请先登录');
+            return;
+        }
+
+        var div = button.parentElement;
+        div.remove();
+    }
+
+    // 新建标签
+    function addNewTag() {
+        if (!isLoggedIn) {
+            alert('请先登录');
+            return;
+        }
+
+        var newDiv = document.createElement('div');
+        var newTextarea = document.createElement('textarea');
+        newTextarea.name = 'content[]';
+        newTextarea.rows = '3';
+        newTextarea.cols = '80';
+
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.textContent = '删除';
+        deleteButton.onclick = function () {
+            deleteLine(this);
+        };
+
+        newDiv.appendChild(newTextarea);
+        newDiv.appendChild(deleteButton);
+
+        document.getElementById('editForm').appendChild(newDiv);
+    }
+
+    // 初始化时检查密码
+    function checkPassword() {
+        // 向后端发送 GET 请求，获取登录状态
+        fetch('/check_login_status')
+            .then(response => response.json())
+            .then(data => {
+                // 更新 isLoggedIn 变量，以便在其他函数中使用
+                isLoggedIn = data.isLoggedIn;
+
+                // 如果未登录，则显示提示消息
+                if (!isLoggedIn) {
+                    document.getElementById('message').style.display = 'block';
+                }
+            });
+    }
+
+    // 初始化时检查密码
+    checkPassword();
+</script>
+</body>
+</html>
