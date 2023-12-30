@@ -16,7 +16,7 @@ docker run -d --restart always -p 10012:5000 --name getnode_webui brownbearye/ge
  
 6.  平台使用 
   a.  输入IP：端口登录到系统，默认密码为123456
-[登录](https://tc.vless.vip/app/thumb.php?img=/i/2023/12/16/s4c2fi.png)
+![RUNOOB 图标](https://tc.vless.vip/i/2023/12/16/s4c2fi.png)
   b. 
   c. 新建节点
     ⅰ. 点击新建标签即为新加入节点，输入节点分享信息，然后点保存即可保存节点
