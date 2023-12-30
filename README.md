@@ -22,7 +22,8 @@ docker run -d --restart always -p 10012:5000 --name getnode_webui brownbearye/ge
     ⅰ. 同理，点击修在新密码栏输入新的密码，再点击修改密码，即可修改登录密码
 8. 订阅链接使用-- 以V2rayN为例 
 http://ip:10011/get_node?token=123456
-9.  参数讲解 
+
+10.  参数讲解 
   a. ip:10011   这里就是搭建webui的服务器的IP ， 10011就是在新建docker容器时，参数指定的端口
   b. get_node?token=    这里保存不变，
   c. 123456    这里就是你的登录密码， 如果在web上面修改了密码， 节点订阅地址同样需要修改
