@@ -18,11 +18,15 @@ docker run -d --restart always -p 10012:5000 --name getnode_webui brownbearye/ge
   a.  输入IP：端口登录到系统，默认密码为123456
 
 ![RUNOOB 图标](https://tc.vless.vip/i/2023/12/16/s4c2fi.png)
-  b. 
+
+
+
   c. 新建节点
     ⅰ. 点击新建标签即为新加入节点，输入节点分享信息，然后点保存即可保存节点
     
 ![添加节点](https://tc.vless.vip/i/2023/12/16/s4cczl.png) 
+
+
   d. 修改密码
     ⅰ. 同理，点击修在新密码栏输入新的密码，再点击修改密码，即可修改登录密码
 8. 订阅链接使用-- 以V2rayN为例 
